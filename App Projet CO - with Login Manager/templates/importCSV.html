@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+  AOS.init();
+</script>
+<div class="login_user"><p><img width="27" height="27" style="filter: invert(100%); margin-right:10px" src="/static/images/person-circle.svg">
+    {{user}} <a class="to_login" href="/logout" style="margin-left:20px">Déconnexion</a></p></div>
+<div class="content-container">
+    <div class="container-fluid">
+        <div class="jumbotron" style="padding: 1rem 2rem;">
+        <h1 style ="margin-left:15px; font-size: 3em; color: #00addc; padding-bottom:8px; border-bottom:solid 2px #2d435c6c">Analyse sur le Fichier CSV : {{nb_msno}} Utilisateurs</h1>
+            <div class = 'wrapper'>
+                <div class="haut_gauche">
+                    <div class='container' style='align-items:center;' data-aos="zoom-in-up" data-aos-duration="1000">
+                        <h2 class ='title_dash'>Désabonnement Potentiel</h2>
+                        <div style = "box-shadow:0px 1px 8px 2px #55adffbf;">
+                            {% for row in tables %}
+                            {{ row|safe }}
+                            {% endfor %}
+                        </div>
+                        <script>  
+                            //create CSV file data in an array  
+                            var csvFileData = {{data_js|safe }};  
+                                
+                            //create a user-defined function to download CSV file   
+                            function download_csv_file() {  
+                            
+                                //define the heading for each row of the data  
+                                var csv = 'Identifiant, Expiration Abonnement, Risque de Partir (%)\n';  
+                                
+                                //merge the data with CSV  
+                                csvFileData.forEach(function(row) {  
+                                        csv += row.join(',');  
+                                        csv += "\n";  
+                                });  
+                            
+                                var hiddenElement = document.createElement('a');  
+                                hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);  
+                                hiddenElement.target = '_blank';  
+                                
+                                //provide the name for the CSV file to be downloaded  
+                                hiddenElement.download = 'Upload_demonstration.csv';  
+                                hiddenElement.click();  
+                            }  
+                            </script>                            
+                            <!-- create an HTML button to download the CSV file on click -->  
+                            <div style="display:flex; margin-top:25px">
+                                <img src="/static/images/arrowDL.svg" class="download_arrow">
+                                <button onclick="download_csv_file()" class="btn btn-primary">Télécharger le CSV</button>
+                            </div>       
+                    </div>
+                </div>               
+                <div class="haut_droit">
+                    <div class='container'>
+                        <script>var list_of_dico = {{list_of_dico|safe}}</script>
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+                        <script src="https://code.highcharts.com/modules/variable-pie.js"></script>
+                        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+                        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+                        
+                        <figure class="highcharts-figure">
+                            <div id="container_2"></div>
+                        </figure>
+                        <script src="static/js/script_graph2.js"></script>  
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>    
+{% endblock %}

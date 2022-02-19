@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="login_user"><p><img width="27" height="27" style="filter: invert(100%); margin-right:10px" src="/static/images/person-circle.svg">
+  {{user}} <a class="to_login" href="/logout" style="margin-left:20px">Déconnexion</a></p></div>
+<div class="content-container">
+  <div class="container-fluid"> 
+      <div class="jumbotron" style="padding: 1rem 2rem;">
+      <h1>Simulation sur l'Attrition</h1>
+      <p style="padding-bottom:40px; padding-top:20px; border-bottom:solid 2px #2d435c6c">
+        Vous pouvez utiliser les paramètres <span style="font-style: italic;">Abonné</span> ou <span style="font-style: italic;">Désabonné</span>
+        pour déterminer si le membre risque de partir les services de l'entreprise. Un score de risque d'attrition est attribué et généré par le modèle 
+        de classification binaire. Ce score est définit par la probabilité de prédiction du modèle pour avoir un 
+        résultat plus affiné. L'état de ces membres est déjà connu afin de réaliser une comparaison entre la réalité et 
+        la prédicition du modèle.
+      </p>
+    <div style="padding-top:20px; display: flex; justify-content: space-between;">
+      <div style="display: flex; flex-direction: column;">
+        <div><h2 style="text-align:center;">Sélection</h2></div>
+        <div style="display: flex; justify-content: space-between;">
+          <form action="simulation" method="POST">
+              <div style="display: flex; margin: 10px 0px;">
+                <select name="is_churn" class="form-control" style="margin:10px; width:210px">
+                    <option value=""> Utilisateur Aléatoire </option>
+
+                    {% for f in lists %}
+                        <option value="{{f}}">{{f}}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" value="submit" class="btn btn-primary" style="margin:10px;">Valider</button>      
+              </div>
+          </form>
+        </div>
+        <div style="margin : 0px 10px; width : 300px;">
+          {% for row in tables %}
+          {{ row|safe }}
+          {% endfor %}
+        </div>
+      </div>
+      <div>
+        <div><h2 style="text-align:center">Score de Risque</h2></div>
+          <div style="display: flex; justify-content: center">
+            <div class="counter"  data-cp-percentage="{{prediction}}" data-cp-color="rgb{{color_pred}}"></div>
+          </div>
+      </div>
+      <div>
+        <div><h2 style="text-align: center;">Résultats</h2></div>
+        <div class ="label">
+          <p> Statut Réél </p>
+          <p class = "results" style="background-color: rgb{{color_target}}">{{target_text|safe}}</p>
+        </div>
+        <div class ="label" style="margin-top: 30px;">
+          <p> Prédiction </p>
+          <p class = "results" style="background-color: rgb{{color_pred}}">{{prediction_text|safe}}</p>
+        </div>
+        <div style="display: flex; justify-content: center;"><img src = "/static/images/{{img_result}}.svg" class = "img_results" ></div>
+      </div>    
+  </div>
+</div>
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+var circleProgress = (function(selector) {
+var wrapper = document.querySelectorAll(selector);
+Array.prototype.forEach.call(wrapper, function(wrapper, i) {
+var wrapperWidth, wrapperHeight, percent, innerHTML, context, lineWidth, centerX, centerY,
+radius, newPercent, speed, from, to, duration, start, strokeStyle, text;
+
+var getValues = function() {
+wrapperWidth = parseInt(window.getComputedStyle(wrapper).width);
+wrapperHeight = wrapperWidth;
+percent = wrapper.getAttribute('data-cp-percentage');
+innerHTML = '<span class="percentage" style="color:rgb{{color_pred}}"><strong>' + percent + '</strong> %</span><canvas class="circleProgressCanvas" width="' + (wrapperWidth * 2) + '" height="' + wrapperHeight * 2 + '"></canvas>';
+wrapper.innerHTML = innerHTML;
+text = wrapper.querySelector(".percentage");
+canvas = wrapper.querySelector(".circleProgressCanvas");
+wrapper.style.height = canvas.style.width = canvas.style.height = wrapperWidth + "px";
+context = canvas.getContext('2d');
+centerX = canvas.width / 2;
+centerY = canvas.height / 2;
+newPercent = 0;
+speed = 1;
+from = 0;
+to = percent;
+duration = 1000;
+lineWidth = 50;
+radius = canvas.width / 2 - lineWidth;
+strokeStyle = wrapper.getAttribute('data-cp-color');
+start = new Date().getTime();
+};
+
+function animate() {
+requestAnimationFrame(animate);
+var time = new Date().getTime() - start;
+if (time <= duration) {
+  var x = easeInOutQuart(time, from, to - from, duration);
+  newPercent = x;
+  text.innerHTML = Math.round(newPercent) + " %";
+  drawArc();
+}
+}
+
+function drawArc() {
+var circleStart = 1.5 * Math.PI;
+var circleEnd = circleStart + (newPercent / 50) * Math.PI;
+context.clearRect(0, 0, canvas.width, canvas.height);
+context.beginPath();
+context.arc(centerX, centerY, radius, circleStart, 4 * Math.PI, false);
+context.lineWidth = lineWidth;
+context.strokeStyle = "#2d3841";
+context.stroke();
+context.beginPath();
+context.arc(centerX, centerY, radius, circleStart, circleEnd, false);
+context.lineWidth = lineWidth;
+context.strokeStyle = strokeStyle;
+context.stroke();
+
+}
+var update = function() {
+getValues();
+animate();
+}
+update();
+
+var btnUpdate = document.querySelectorAll(".btn-update")[0];
+btnUpdate.addEventListener("click", function() {
+wrapper.setAttribute("data-cp-percentage", Math.round(getRandom(5, 95)));
+update();
+});
+wrapper.addEventListener("click", function() {
+update();
+});
+
+var resizeTimer;
+window.addEventListener("resize", function() {
+clearTimeout(resizeTimer);
+resizeTimer = setTimeout(function() {
+  clearTimeout(resizeTimer);
+  start = new Date().getTime();
+  update();
+}, 250);
+});
+});
+
+function easeInOutQuart(t, b, c, d) {
+if ((t /= d / 2) < 1) return c / 2 * t * t * t * t + b;
+return -c / 2 * ((t -= 2) * t * t * t - 2) + b;
+}
+
+});
+
+circleProgress('.counter');
+
+function getRandom(min, max) {
+return Math.random() * (max - min) + min;
+}
+});
+
+
+
+
+
+</script>
+  {% endblock %}

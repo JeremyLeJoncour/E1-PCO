@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+<script>
+  AOS.init();
+</script>
+<div class="login_user"><p><img width="27" height="27" style="filter: invert(100%); margin-right:10px" src="/static/images/person-circle.svg">
+  {{user}} <a class="to_login" href="/logout" style="margin-left:20px">Déconnexion</a></p></div>
+<div class="content-container">
+  <div class="container-fluid">
+      <div class="jumbotron">
+          <div style="color:#00addc; margin-bottom: 20px;">
+          <h1 style="color:#00addc;">Evaluation des performances</h1></div>
+          <p style="color:#00addc;">{{time}}</p>
+          <h2 style="color:#00addc; padding-bottom: 10px; margin-bottom:30px; border-bottom:solid 2px #2d435c6c">Métriques de performance</h2>
+          <p style="padding-bottom: 15px;">Les métriques utilisées sont disponibles avec la libraire ScikitLearn. Dans le cas de 
+            classification binaire sur des classes déséquilibrées, plusieurs scores sont donc nécessaires 
+            afin d'en évaluer les performances du modèle d'Intelligence Artificielle. La perte logarithmique <span style="font-style: italic;">Log Loss</span> 
+          est la principale métrique à vérifier (et privilégiée pour la compétition KKBOX dont le dataset en est tiré).
+          Le <span style="font-style: italic;">score ROC AUC, le score F1, le coefficient de corrélation de Matthews (MCC), la Précision et le Rappel (Recall)</span>
+          sont aussi vérifiés afin d'avoir une vision d'ensemble des performances du modèle.</p>
+          <div style="display:flex; flex-direction: column; margin:30px 0px;">
+            <div style="display:flex; justify-content: space-around;">
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="2500">
+                <p class="p_metric">Log Loss</p></div>
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="2250">
+                <p class="p_metric">Score AUC</p></div>
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="2000">
+                <p class="p_metric">Score F1</p></div>
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="1750">
+                <p class="p_metric">MCC</p></div>
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="1500">
+                <p class="p_metric">Recall</p></div>
+              <div class="score_model background_score score_title" data-aos="zoom-in" data-aos-duration="1250">
+                <p class="p_metric">Precision</p></div>
+            </div>
+            <div style="display:flex; justify-content: space-around;">
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="2500">
+                <p class="p_metric">{{loss}}</p></div>
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="2250">
+                <p class="p_metric">{{auc}}</p></div>
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="2000">
+                <p class="p_metric">{{scoreF}}</p></div>
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="1750">
+                <p class="p_metric">{{scoremcc}}</p></div>
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="1500">
+                <p class="p_metric">{{recall}}</p></div>
+              <div class="score_model score_title" data-aos="zoom-in" data-aos-duration="1250">
+                <p class="p_metric">{{precision}}</p></div>
+            </div>
+          </div>
+          <div style="display:flex; flex-direction: column;">
+            <div style="display: flex;">
+              <div><!--Matrice Section-->
+                <h2 style="color:#00addc; padding-bottom: 10px; margin-bottom:30px; border-bottom:solid 2px #2d435c6c">Matrice de confusion</h2>
+                <div style="display:flex;">
+                  <div>
+                    <div style="display:flex;">
+                      <div class ="matrix_box matrix_TPTN" style="background-color: rgb{{matrix_colorTN}};">
+                        
+                          <p style="text-align: center; margin-top:40px; font-size:1.1em; font-weight: bold;">True Negative</p>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center;">{{matrix[0][0]}}</p><img src="/static/images/people-fill.svg" height="30px" style="margin-left:10px; filter:invert(100%)"></div>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center; margin-bottom:40px; font-size:1.1em; font-weight: bold;">{{TrueN}} %</p>
+                          </div>
+                        
+                      </div>
+                      <div class ="matrix_box matrix_FPFN" style="background-color: rgb{{matrix_colorFP}};">
+                        
+                          <p style="text-align: center; margin-top:40px; font-size:1.1em; font-weight: bold;">False Positive</p>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center;">{{matrix[0][1]}}</p><img src="/static/images/people-fill.svg" height="30px" style="margin-left:10px; filter:invert(100%)"></div>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center; margin-bottom:40px; font-size:1.1em; font-weight: bold;">{{FalseP}} %</p>
+                          </div>
+                        
+                      </div>
+                    </div>
+                    <div style="display:flex;">
+                      <div class ="matrix_box matrix_FPFN" style="background-color: rgb{{matrix_colorFN}};">
+                          
+                          <p style="text-align: center; margin-top:40px; font-size:1.1em; font-weight: bold;">False Negative</p>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center;">{{matrix[1][0]}}</p><img src="/static/images/people-fill.svg" height="30px" style="margin-left:10px; filter:invert(100%)"></div>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center; margin-bottom:40px; font-size:1.1em; font-weight: bold;">{{FalseN}} %</p>
+                          </div>
+                        
+                      </div>
+                      <div class ="matrix_box matrix_TPTN" style="background-color: rgb{{matrix_colorTP}};">
+                        
+                          <p style="text-align: center; margin-top:40px; font-size:1.1em; font-weight: bold;">True Positive</p>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center;">{{matrix[1][1]}}</p><img src="/static/images/people-fill.svg" height="30px" style="margin-left:10px; filter:invert(100%)"></div>
+                          <div style="display:flex; justify-content: center;">
+                          <p style="text-align: center; margin-bottom:40px; font-size:1.1em; font-weight: bold;">{{TrueP}} %</p>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="gradient_matrix" style="background:linear-gradient({{gradient[0]}}, {{gradient[1]}});"></div>
+                  <div style="display: flex; flex-direction: column; justify-content: space-between; height:408px; width:45px">
+                    <p>100 %</p><p>75 %</p><p>50 %</p><p>25%</p><p>5%</p>
+                  </div>
+                </div>
+              </div><!--Matrice Section-->
+              <div style="margin-left:20px">
+                <h2 style="color:#00addc; padding-bottom: 10px; margin-bottom:30px; border-bottom:solid 2px #2d435c6c; width:500px">Proportion des classes</h2>
+                <div>
+
+                  <script>
+                  var data0 = {{data0|safe}}
+                  var data1 = {{data1|safe}}
+                  </script>
+
+                  <script src="https://code.highcharts.com/highcharts.js"></script>
+                  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+                  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+                  
+                  <figure class="highcharts-figure">
+                      <div id="container_5"></div>
+                  </figure>
+                  <script src="static/js/script_graph3.js"></script>  
+                </div>
+              </div>
+            </div>
+            <div>
+              <div style="display: flex; margin-top:30px">
+                <div><!--3ème Section-->
+                  <h2 style="color:#00addc; padding-bottom: 10px; margin-bottom:30px; border-bottom:solid 2px #2d435c6c; width:500px">Rapport Sensibilité/Précision</h2>
+                  <div>
+
+                    <script>
+                    var data_curve = {{data_curve|safe}}
+                    </script>
+
+                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+                    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+                    <figure class="highcharts-figure">
+                        <div id="container_4"></div>
+                    </figure>  
+                    <script src="static/js/script_graph3.js"></script>  
+                  </div>
+                </div>
+                <div style="margin-left:20px">
+                  <h2 style="color:#00addc; margin-bottom:30px; padding-bottom:10px; border-bottom:solid 2px #2d435c6c; width:500px">Répartition des probabilités</h2>
+                    <div>
+  
+                        <script>
+                        var data_False = {{data_False|safe}}
+                        var data_True = {{data_True|safe}}
+                        </script>
+  
+                        <script src="https://code.highcharts.com/highcharts.js"></script>
+                        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+                        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  
+                        <figure class="highcharts-figure">
+                            <div id="container_3"></div>
+                        </figure>  
+                        <script src="static/js/script_graph3.js"></script>  
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <script>  
+                //create CSV file data in an array  
+                var csvFileData = {{sauvegarde|safe }};  
+                    
+                //create a user-defined function to download CSV file   
+                function download_csv_file() {  
+                  
+                    //define the heading for each row of the data  
+                    var csv = "Date d'évaluation, Log Loss, Score AUC, Score F1, Score MCC, Recall, Precision, True Positive, True Negative, False Positive, False Negative, Nombre d'instances Test\n";  
+                      
+                    //merge the data with CSV  
+                    csvFileData.forEach(function(row) {  
+                            csv += row.join(',');  
+                            csv += "\n";  
+                    });  
+                   
+                    //display the created CSV data on the web browser   
+                    //document.write(csv);//  
+                  
+                     
+                    var hiddenElement = document.createElement('a');  
+                    hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);  
+                    hiddenElement.target = '_blank';  
+                      
+                    //provide the name for the CSV file to be downloaded
+                    hiddenElement.download = 'Evaluation_Model.csv';  
+                    hiddenElement.click();  
+                }  
+                </script>                            
+                <!-- create an HTML button to download the CSV file on click -->
+                <div style="display:flex">
+                  <img src="/static/images/arrowDL.svg" class="download_arrow">
+                  <button onclick="download_csv_file()" class="btn btn-primary">Télécharger les Résultats</button>
+                </div>     
+            </div>
+            <div>
+              <div style="margin-top:50px">
+                <div><!--4ème Section-->
+                  <h2 style="color:#00addc; padding-bottom: 10px; margin-bottom:30px; border-bottom:solid 2px #2d435c6c;">Historique d'évaluation</h2>
+                  <div>
+
+                    <script>
+                    var date_valuate = {{date_valuate|safe}}
+                    var hist_loss = {{hist_loss|safe}}
+                    var hist_AUC = {{hist_AUC|safe}}
+                    var hist_F1 = {{hist_F1|safe}}
+                    var hist_MCC = {{hist_MCC|safe}}
+                    var hist_Recall = {{hist_Recall|safe}}
+                    var hist_Precision = {{hist_Precision|safe}}
+                    </script>
+
+                    <script src="https://code.highcharts.com/highcharts.js"></script>
+                    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+                    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+                    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+                    <figure class="highcharts-figure" style="margin-left: 100px;">
+                        <div id="container_6"></div>
+                    </figure>  
+                    <script src="static/js/script_graph3.js"></script>  
+                  </div>
+                </div>
+            </div>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

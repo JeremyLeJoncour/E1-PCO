@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="login_user"><p><img width="27" height="27" style="filter: invert(100%); margin-right:10px" src="/static/images/person-circle.svg">
+    {{user}} <a class="to_login" href="/logout" style="margin-left:20px">Déconnexion</a></p></div>
+<div class="content-container">
+    <div class="container-fluid">
+
+        <!-- Message principale -->
+        <div class="jumbotron">
+            <div style="color:#00addc; margin-bottom: 20px;">
+            <h1 style="color:#00addc;">Réalisation du Projet</h1>
+                <p style="color:#00addc;">Projet Chef-d'Oeuvre pour la Certification Développeur IA</p>
+            </div>
+            <div style="display:flex; justify-content: space-between; margin-top:35px; padding-bottom:30px; border-bottom:solid 2px #2d435c6c">
+                <div>
+                    <h4 style="color:#00addc; margin-bottom: 30px;">Analyses et Conception du Dataset</h4>
+                    <div style="display: flex;">
+                        <div>
+                            <p>
+                                Les jeux de données proviennent d'une <a href="https://www.kaggle.com/c/kkbox-churn-prediction-challenge ">compétition Kaggle</a>
+                                présentant de nombreux fichiers CSV d'entrainement et fichiers de soumissions.
+                                Plusieurs fichiers (Version 2 et 3) sont à disposition comportant des données des utilisateurs jusqu'à 
+                                2017. Le but est ici de créer un fichier CSV unique qui sera ensuite intégré dans une base de données 
+                                relationnelle type MySQL. Le nombre d'utilisateurs uniques diffère d'un CSV à l'autre et une étude 
+                                approfondie sur un Dataset global apporterait des biais dans la proportion d'individus 
+                                désabonnés/abonnés. 
+                            </p>
+                            <p>
+                                Ainsi, les études ont été faites individuellement pour chaque CSV <span style="font-style: italic;">Transactions, 
+                                Membres, Logs</span> avec un merge de <span style="font-style: italic;">Train</span>. De plus, le nombre d'utilisateur 
+                                global sur les CSV <span style="font-style: italic;">Transactions et Logs</span> est plus élevé que le nombre d'utilisateur unique, 
+                                indiquant un aspect temporel des informations. Dans le cadre de ce projet, seule la dernière en date pour chaque membre sera pris en 
+                                compte.
+                            </p>
+                            <p>
+                                L'analyse complète effectuée en amont de la création de modèle est 
+                                disponible sur le <a href="https://github.com/JeremyLeJoncour/Projet-CO/blob/main/Analyses/Analyses.ipynb">ici</a>.
+                            </p>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div style="display:flex; justify-content: space-between; margin-top:35px; padding-bottom:30px; border-bottom:solid 2px #2d435c6c">
+                <div>
+                    <h4 style="color:#00addc; margin-bottom: 30px;">Conception du Modèle</h4>
+                    <div>
+                    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

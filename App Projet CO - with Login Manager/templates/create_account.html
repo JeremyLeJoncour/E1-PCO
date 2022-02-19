@@ -1,0 +1,72 @@
+{% extends 'log.html' %}
+{% block content %}
+<div class="content-container" style="padding-top: 20px; margin-left: 5px">
+    <div class="container-fluid">
+        <div class="jumbotron col-md-6 float-right" style="box-shadow:0px 1px 10px 2px #55adffbf; border: #69deff solid 1px;">
+            <div style="position: relative; margin:30px 0px">
+                <div style="display: flex; justify-content: center;">
+                <img src = "/static/images/user_login2.png" class ="connexion_img" style="margin-bottom: 60px;">
+            </div>
+
+            <div style="padding-left:45px;">  
+                <form method="POST" style = "display: flex; flex-direction: column; width: 400px;"
+                class="needs-validation" novalidate>
+                    
+                    <div style="display: flex;">
+                    <img src = "/static/images/person.svg" class = "img_login">
+                    <input class="form-control login_input" placeholder = "Entrez un Identifiant" 
+                    type="text" id="Login" name="Login" required></div>
+                   
+                    <div style="display: flex;">
+                    <img src = "/static/images/password.svg" class = "img_login">
+                    <input class="form-control login_input" placeholder = "Entrez un Mot de passe" 
+                    type="password" id="Password" name="Password" required></div>
+                    
+                    <div style="display: flex;">
+                    <img src = "/static/images/check.svg" class = "img_login">
+                    <input class="form-control login_input" placeholder = "Confirmez votre Mot de passe" 
+                    type="password" id="Confirmation" name="Confirmation" required></div>
+
+                    <div style="display: flex; justify-content: space-between;">
+                    <button type="submit" class="btn btn-primary" value="submit" style="height:40px; width: 150px; margin-top:20px">
+                            Confirmer</button>
+                    <a href="/"><p style="color:#00a2ff; padding: 15px 0px 0px 135px">Retour à la page de connection</p></a>
+                    </div>       
+                </form>
+                <script>
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (function() {'use strict';
+                      window.addEventListener('load', function() {
+                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                        var forms = document.getElementsByClassName('needs-validation');
+                        // Loop over them and prevent submission
+                        var validation = Array.prototype.filter.call(forms, function(form) {
+                          form.addEventListener('submit', function(event) {
+                            if (form.checkValidity() === false) {
+                              event.preventDefault();
+                              event.stopPropagation();
+                            }
+                            form.classList.add('was-validated');
+                          }, false);
+                        });
+                      }, false);
+                    })();
+                </script>
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <div class="msg_alert" style="background-color: {{alerte_color}};"><p>{{alerte}}</p></div>
+            </div>
+            <div style="margin-top:30px">
+                <h3 style="border-bottom:solid 2px #2a343f; padding: 0px 0px 10px 20px; margin-bottom: 30px; color:#fff; font-weight: bold;">Conditions de création de compte</h3>
+                <p style="padding-left: 20px;">L'Identifiant et le Mot de Passe doivent contenir au minimum 8 caractères en prenant en compte les conditions suivantes :</p>
+                <ul style="color:#fff; padding-left: 70px;">
+                    <li>Au moins une Majuscule</li>
+                    <li>Au moins un caractère numérique (0-9)</li>
+                    <li>Peut contenir les caractères spéciaux suivant : @#$%!*^&+=</li>
+                </ul>
+            </div>
+            </div>
+            </div>
+    </div>    
+</div>
+{% endblock %}

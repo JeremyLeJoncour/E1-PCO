@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="login_user"><p><img width="27" height="27" style="filter: invert(100%); margin-right:10px" src="/static/images/person-circle.svg">
+    {{user}} <a class="to_login" href="/logout" style="margin-left:20px">Déconnexion</a></p></div>
+<div class="content-container">
+    <div class="container-fluid">
+
+        <!-- Message principale -->
+        <div class="jumbotron">
+            <div style="color:#00addc; margin-bottom: 20px;">
+            <h1 style="color:#00addc;">Prédiction sur les phénomènes d'Attrition chez
+                <img class = "kkbox" src="/static/images/kkb.png"></h1>
+                <p style="color:#00addc;">Projet Chef-d'Oeuvre pour la Certification Développeur IA</p>
+            </div>
+            <div style="display:flex">
+                <img src="/static/images/image1.jpg" class="illustration">
+                <div>
+                    <p style="padding-top:20px;">L'attrition est le fait, pour un client (individu, entreprise, etc.) de quitter un fournisseur de biens ou 
+                        de services, une marque, un produit ou un service. Le taux d'attrition («<span style="font-style: italic;">churn rate</span>» en anglais) se mesure 
+                        comme le pourcentage de clients perdus, sur une période donnée (en général une année ou un mois) par rapport 
+                        au nombre total de clients figurant dans la base clientèle au début de cette période.
+                    </p>
+                    <p>
+                        Il dépend de la capacité de l'entreprise à retenir ses clients, à les fidéliser par une offre 
+                        pertinente. Elle conduit souvent à l'instauration d'un score prédictif qui sert à déclencher des 
+                        actions marketings et commerciales.
+                    </p>
+                    <p>
+                        Généralement, ces scores sont définis par le service marketing par une analyse de données 
+                        plus ou moins complexe, comparant les clients satisfaits du service et des clients déjà 
+                        désabonnés afin d’en ressortir les aspects défaillants de l’offre et le profil des 
+                        utilisateurs résilients. Dans cette optique, des processus de modélisation via des 
+                        algorithmes de Machine Learning (apprentissages supervisés notamment) permettent une 
+                        détection plus affinée des utilisateurs à fort potentiel d’attrition. La prédiction de ce 
+                        phénomène est l'un des cas d'usages les plus fréquents de la data-science.
+                    </p>
+                </div>
+            </div>
+            <p style="padding-bottom:60px; border-bottom:solid 2px #2d435c6c">
+                Pour ce projet, nous nous proposons de travailler sur la conception de modèles prédictifs 
+                sur le comportement des utilisateurs (détection des clients à haut potentiel d’attrition) 
+                du service de streaming d’écoute KKBOX. Cette plateforme est le premier service de streaming musical 
+                en Asie, détenant la bibliothèque musicale Asia-Pop la plus complète au monde avec plus de 
+                30 millions de pistes. Ils offrent une version illimitée de leur service à des millions de 
+                personnes, soutenue notamment par de la publicité et des abonnements payants.
+            </p>
+            <h2 style="color:#00addc; padding-top:10px; margin: 20px 0px;">Démonstration</h2>
+            <p style="padding-top:10px;">Vous pouvez accéder aux prédictions des utilisateurs enregistrés depuis 
+                une base de données ou en chargeant directement un fichier CSV préparé et prévu à cette effet. 
+                Un tableau sera généré répertoriant les membres de la plateforme avec leur score potentiel de 
+                départ. Aussi, un graphique indiquera la proportion d'Utilisateurs en fonction de leur score établi
+                par le modèle de classification :
+            </p>
+            
+            <div style="display:flex; justify-content: space-between; margin-top:35px; padding-bottom:60px; border-bottom:solid 2px #2d435c6c">
+                <div><h4 style="color:#00addc; margin-bottom: 30px;">Prédictions via la Base de données</h4>    
+                    <p style="font-size: 0.9em; width: 500px; padding-bottom: 28px;">
+                        Les prédictions sont effectuées sur l'ensemble des utilisateurs en fonction d'une date 
+                        d'expiration d'abonnement spécifique (à partir d'Avril 2017) : 
+                    </p>
+                <form action="database" method="POST" style="display:flex; justify-content: space-around;">
+                    <img src="/static/images/server.svg" class="img_server">
+                    <div style="display:flex; flex-direction: column; vertical-align: middle;">
+                        <select name="year" class="form-control login_input" style="width : 250px">
+                            <option value=""> Année </option>
+            
+                            {% for y in year %}
+                                <option value="{{y}}">{{y}}</option>
+                            {% endfor %}
+                        </select>
+                        <select name="month" class="form-control login_input" style=" width : 250px">
+                            <option value=""> Mois </option>
+            
+                            {% for m in month %}
+                                <option value="{{m}}">{{m}}</option>
+                            {% endfor %}
+                        </select>
+                    <button type="submit" class="btn btn-primary" value="submit" style="height:40px; margin-top:10px">Valider</button>
+                    </div>
+                </form>
+                </div>
+                <div><h4 style="color:#00addc;">Prédictions en fonction d'un fichier CSV</h4>
+                    <form style="display : flex; flex-direction: column;" action="importCSV" method="post">
+                        <div class="file-drop-area">
+                            <img src="/static/images/download.svg" class = "img_dl">
+                            <span class="file-msg">Glissez et déposez le fichier ici ou...</span>
+                            <div style="display : flex; margin-top: 15px;">
+                                <div style="margin: 5px 0px;">
+                                    <span class="fake-btn">Importez votre CSV</span>
+                                    <input class="file-input" type="file" name="csvfile" multiple>
+                                </div>
+                            </div>
+                        </div>
+                        <button style="margin-top:15px; height: 40px; width:250px" type="submit" class="btn btn-primary" value="submit">Valider</button>
+                    </form>
+                </div>
+            </div>
+            <h2 style="color:#00addc; padding-top:10px; margin: 20px 0px;">Evaluation et Maintenance du Modèle</h2>
+            <p style="padding-top:10px;">Afin que le modèle reste viable, de nouvelles données labelisées doivent
+                être utilisées afin de tester ses performances. Ces données peuvent provenir, dans ce cas, des
+                informations récoltées sur l'utilisateurs à n+1 Mois. En effet, le présent modèle a été entrainé
+                sur des données utilisateurs de la plateforme KKBOX du mois de Mars 2017. Dans un cas réel, les données 
+                peuvent être récupérées depuis la base de données pour le mois d'Avril 2017 par exemple. 
+                Ainsi, le modèle peut confronter ses prédictions faites à partir des données du mois de Mars sur les 
+                données réelles du mois d'Avril.    
+            </p>
+            <p>Dans cette démonstration, les données labelisées proviennent de Mars 2017. Les métriques durant la première évaluation du modèle
+                sont présentées. Une matrice de confusion est générée sur les nouvelles données importées.
+            </p>
+            <div style="display: flex; vertical-align: middle ; margin-top: 30px;">
+                
+                <form style="display : flex; flex-direction: column; margin-top: 30px;" action="performance" method="post">
+                    <h4 style="color:#00addc;">Démonstration sur un CSV</h4>
+                    <div class="file-drop-area">
+                        <img src="/static/images/download.svg" class = "img_dl">
+                        <span class="file-msg">Glissez et déposez le fichier ici ou...</span>
+                        <div style="display : flex; margin-top: 15px;">
+                            <div style="margin: 5px 0px;">
+                                <span class="fake-btn">Importez votre CSV</span>
+                                <input class="file-input" type="file" name="csvfile" multiple>
+                            </div>
+                        </div>
+                    </div>
+                    <button style="margin-top:15px; height: 40px; width:250px" type="submit" class="btn btn-primary" value="submit">Evaluer le modèle</button>
+                </form>
+                <img src="/static/images/evaluate.png" height="350px" style="margin-left: 100px;">
+            </div>
+            <script>
+                var $fileInput = $('.file-input');
+                var $droparea = $('.file-drop-area');
+
+                // highlight drag area
+                $fileInput.on('dragenter focus click', function() {
+                $droparea.addClass('is-active');
+                });
+
+                // back to normal state
+                $fileInput.on('dragleave blur drop', function() {
+                $droparea.removeClass('is-active');
+                });
+
+                // change inner text
+                $fileInput.on('change', function() {
+                var filesCount = $(this)[0].files.length;
+                var $textContainer = $(this).prev();
+
+                if (filesCount === 1) {
+                    // if single file is selected, show file name
+                    var fileName = $(this).val().split('\\').pop();
+                    $textContainer.text(fileName);
+                } else {
+                    // otherwise show number of files
+                    $textContainer.text(filesCount + ' files selected');
+                }
+                });
+            </script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

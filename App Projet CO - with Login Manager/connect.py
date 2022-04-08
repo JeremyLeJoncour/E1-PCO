@@ -5,7 +5,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, roc_auc_score, f1_score, log_loss, matthews_corrcoef, recall_score, precision_score
 from sklearn.metrics import precision_recall_curve
 import joblib
-import colorsys
 from colour import Color
 
 # Importation des Fichiers de Modèles et Scaler :
@@ -35,7 +34,6 @@ def login(login, password):
     rows = cursor.fetchall()
 
     sql = []
-    print(sql)
     for values in rows :
         sql.append(list(values))
 
@@ -43,9 +41,10 @@ def login(login, password):
 
     if len(sql) == 0:
         access = pd.DataFrame([[' ', ' ']], columns = ['identifiant', 'password'])
+    
     else:
         access = pd.DataFrame(sql, columns = ['identifiant', 'password'])
-        print(access)
+
     return access
     
 
@@ -90,17 +89,16 @@ def exist_user(login):
     rows = cursor.fetchall()
 
     sql = []
-    print(sql)
     for values in rows :
         sql.append(list(values))
-    print(f'sql : {sql}')
     link.close()
 
     if len(sql) == 0:
         access = pd.DataFrame([['0']], columns = ['identifiant'])
+    
     else:
         access = pd.DataFrame(sql, columns = ['identifiant'])
-        print(access)
+        
     return access
 
 def update_password(login, password):
@@ -138,15 +136,22 @@ def DB_dataset(year, month):
     # Création du Cursor
     link = mysql.connector.connect(**config)
     cursor = link.cursor(buffered=True)
-
+    
+    if month < 10 :
+        month = '0'+str(month)
+    else :
+        pass
+    
     # Requêtes:
     query = """SELECT Transactions.payment_method_id, Transactions.payment_plan_days,
     Transactions.plan_list_price,Transactions.actual_amount_paid,Transactions.is_auto_renew,
     Transactions.transaction_date,Transactions.membership_expire_date,Transactions.is_cancel,
     Transactions.transaction_count,Transactions.price_per_day,User.msno 
-    FROM transactions JOIN User on Transactions.User_ID = User.User_ID WHERE 
-    Transactions.year_expire = %s AND Transactions.month_expire = %s"""
-    cursor.execute(query, (year, month))
+    FROM transactions JOIN User on Transactions.User_ID = User.User_ID 
+    WHERE MONTH(str_to_date(Transactions.membership_expire_date, '%Y-%m-%d')) = %s AND 
+    YEAR(str_to_date(Transactions.membership_expire_date, '%Y-%m-%d')) = %s"""
+    
+    cursor.execute(query, (str(month),str(year)))
     rows_transaction = cursor.fetchall()
 
     Transactions_sql = []
@@ -198,6 +203,7 @@ def DB_dataset(year, month):
     for i in main['bd']:
         if i == 'inconnu':
             bd_list.append(-1)
+        
         else:
             bd_list.append(int(i))
 
@@ -214,10 +220,12 @@ def preprocessing(f):
     for i in main['bd']:
         if i == 'inconnu':
             bd_list.append(-1)
+        
         else:
             bd_list.append(int(i))
 
     main['bd'] = bd_list
+    
     return main
 
 
@@ -242,7 +250,7 @@ def prediction(dataset):
     Test = dataset.copy()
 
     # Suppression des variables temporelles:
-    Test = Test.drop(['transaction_date'], 1)
+    Test = Test.drop(['transaction_date'], axis = 1)
     Test['membership_expire_date'] = Format_intdate(Test['membership_expire_date'])
     Test['registration_init_time'] = Format_intdate(Test['registration_init_time'])
 
@@ -252,10 +260,10 @@ def prediction(dataset):
     Test['registered_via'] = [str(i)+'R' for i in Test.registered_via]
 
     # Encodage:
-    Test = pd.concat([Test, pd.get_dummies(Test.gender)],1)
-    Test = pd.concat([Test, pd.get_dummies(Test.payment_method_id)],1)
-    Test = pd.concat([Test, pd.get_dummies(Test.registered_via)],1)
-    Test = pd.concat([Test, pd.get_dummies(Test.city)],1)
+    Test = pd.concat([Test, pd.get_dummies(Test.gender)], axis = 1)
+    Test = pd.concat([Test, pd.get_dummies(Test.payment_method_id)], axis = 1)
+    Test = pd.concat([Test, pd.get_dummies(Test.registered_via)], axis = 1)
+    Test = pd.concat([Test, pd.get_dummies(Test.city)], axis = 1)
 
     for feature in colonnescaler:
         if feature not in Test.columns:
@@ -291,17 +299,20 @@ def prediction(dataset):
     for i in final_results["propensity_to_churn(%)"]:
         if i <= 25.0:
             i = 'Risque faible'
+        
         elif 50.0 >= i > 25.0:
             i = 'Risque modéré'
+        
         elif 75.0 >= i > 50.0:
             i = 'Risque élevé'
+        
         else:
             i = 'Risque très élevé'
         liste.append(i)
     
     final_results["Risk"] = liste
     final_results = final_results.sort_values(by=['propensity_to_churn(%)'],  ascending = False)
-    final_results.set_index(['msno'], inplace=False)
+    final_results.set_index(['msno'], inplace = False)
     final_results.index.msno=None
     
     return final_results
@@ -309,7 +320,7 @@ def prediction(dataset):
 
 
 
-def plot_2(dataset):
+def plot(dataset):
     pred25 = len(dataset[dataset['propensity_to_churn(%)']<=25.00])
     
     pred50 = len(dataset[(25.00<dataset['propensity_to_churn(%)']) & 
@@ -338,27 +349,13 @@ def plot_2(dataset):
 
 
 
-def spectrum(light):
-    liste = []
-    hsv = [(h, 1, 1) for h in np.linspace(0, 110/360, 100)]
-    hsv = hsv[::-1]
-    rgb = [colorsys.hsv_to_rgb(*tup) for tup in hsv]
-    
-    defloat = lambda x: tuple((int(light * i) for i in x))
-    for i in [defloat(x) for x in rgb]:
-        liste.append(i)
-    liste.insert(0, (101,101,101))
-    return liste
-
-
-
-
 def gradient_color(start_color, end_color, step):
     colors = list(Color(start_color).range_to(Color(end_color),step))
     gradient = []
     colorsrgb = [i.rgb for i in colors]
     for i in colorsrgb:
         tr = list()
+        
         for j in i:
             j = int(j*255)
             tr.append(j)
@@ -410,6 +407,7 @@ def process_estimation(dictionnaire):
 
 def select_sim():
     dataset = pd.read_csv('Import_demonstration.csv')
+    
     return dataset
 
 
@@ -417,6 +415,7 @@ def select_sim():
 
 def js_csv(dataset):
     datajs = dataset.values.tolist()
+    
     return datajs
 
 

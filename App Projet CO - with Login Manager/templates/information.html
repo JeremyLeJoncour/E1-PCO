@@ -44,7 +44,28 @@
                 <div>
                     <h4 style="color:#00addc; margin-bottom: 30px;">Conception du Modèle</h4>
                     <div>
-                    
+                        <p>
+                            Le Dataset résultant de l’analyse a subi un encodage sur les variables catégorielles et temporelles afin que les algorithmes puissent les traiter durant la phase d’apprentissage. La fonction get_dummies de Pandas convertit les données catégorielles en variables indicatrices. Des variables d’ordre binaire sont donc créées. Pour les dates, celles-ci ont été converties en Integer. Il en résulte au total 90 variables pour 725722 instances (725722 clients uniques).
+                            Le Dataset a ensuite été segmenté en 3 parties avec l’outil train_test_split de SKlearn :
+                            <ul>
+                                <li style="color:#ffffff;"> TRAIN est composé de 70% du jeu de données de départ, utilisé dans 
+                                    la phase d’apprentissage des modèles.</li>
+                                <li style="color:#ffffff;"> Les 30% restants sont partagés entre le Dataset VALID (80%) et TEST 
+                                    (20%). VALID est utilisé dans l’évaluation des modèles entraînés, 
+                                    afin d’en vérifier leurs performances à travers les différentes 
+                                    métriques précédemment évoquées. Le Dataset TEST est incorporé dans 
+                                    une base de données relationnelle, et sera utilisé uniquement dans 
+                                    l’application du projet.</li>
+                            </ul>
+                        </p>
+                        <p>
+                            Du fait que les classes soient déséquilibrées, le paramètre stratify a été défini sur la variable cible is_churn. Pour conserver éventuellement la partition des données, un random_state a été appliqué. Les variables msno et is_churn ont été enlevées de X_train et X_valid.
+                            Les données X_train et X_valid ont ensuite été remises à l’échelle par une standardisation (Standarscaler). La configuration de la standardisation a été sauvegardée dans un fichier Scaler.Joblib pour l’appliquer sur de prochaines nouvelles données (dans le cas des données Test ici).
+                        </p>
+                        <p>
+                            Le modèle final sélectionné est le XGBoost Classfier optimisé traitant 30 variables. Ses scores de performance (en privilégiant principalement le Log Loss) sont les plus élevés parmi les différents modèles évalués. 
+                        </p>
+                        
                     </div>
                 </div>
             </div>

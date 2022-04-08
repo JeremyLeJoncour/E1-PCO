@@ -5,7 +5,7 @@
 <div class="content-container">
   <div class="container-fluid"> 
       <div class="jumbotron" style="padding: 1rem 2rem;">
-      <h1>Simulation sur l'Attrition</h1>
+      <h1 style="color : #00addc">Simulation sur l'Attrition</h1>
       <p style="padding-bottom:40px; padding-top:20px; border-bottom:solid 2px #2d435c6c">
         Vous pouvez utiliser les paramètres <span style="font-style: italic;">Abonné</span> ou <span style="font-style: italic;">Désabonné</span>
         pour déterminer si le membre risque de partir les services de l'entreprise. Un score de risque d'attrition est attribué et généré par le modèle 
@@ -15,7 +15,7 @@
       </p>
     <div style="padding-top:20px; display: flex; justify-content: space-between;">
       <div style="display: flex; flex-direction: column;">
-        <div><h2 style="text-align:center;">Sélection</h2></div>
+        <div><h2 style="text-align:center; color : #00addc">Sélection</h2></div>
         <div style="display: flex; justify-content: space-between;">
           <form action="simulation" method="POST">
               <div style="display: flex; margin: 10px 0px;">
@@ -37,19 +37,19 @@
         </div>
       </div>
       <div>
-        <div><h2 style="text-align:center">Score de Risque</h2></div>
+        <div><h2 style="text-align:center; color : #00addc">Score de Risque</h2></div>
           <div style="display: flex; justify-content: center">
             <div class="counter"  data-cp-percentage="{{prediction}}" data-cp-color="rgb{{color_pred}}"></div>
           </div>
       </div>
       <div>
-        <div><h2 style="text-align: center;">Résultats</h2></div>
+        <div><h2 style="text-align: center; color : #00addc">Résultats</h2></div>
         <div class ="label">
-          <p> Statut Réél </p>
+          <p style="text-align: center;"> Statut Réél </p>
           <p class = "results" style="background-color: rgb{{color_target}}">{{target_text|safe}}</p>
         </div>
         <div class ="label" style="margin-top: 30px;">
-          <p> Prédiction </p>
+          <p style="text-align: center;"> Prédiction </p>
           <p class = "results" style="background-color: rgb{{color_pred}}">{{prediction_text|safe}}</p>
         </div>
         <div style="display: flex; justify-content: center;"><img src = "/static/images/{{img_result}}.svg" class = "img_results" ></div>

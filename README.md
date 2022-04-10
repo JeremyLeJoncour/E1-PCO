@@ -304,29 +304,35 @@ Le schéma ci-dessus montre la structure de l'application et comment il intérag
 
 ### Pages de connexion
 <p align="center">
-  <img src="Ressources/login_1.png" />
-  <img src="Ressources/login_2.png" />
+  <img src="Ressources/page_1.png" />
+  <img src="Ressources/page_2.png" />
 </p>
 
 ### Connexion BDD ou import de Fichiers CSV
 <p align="center">
-  <img src="Ressources/demonstration_1.png" />
-  <img src="Ressources/analyse_bdd.png" />
+  <img src="Ressources/page_6.png" />
+  <img src="Ressources/page_7.png" />
 </p>
 
 ### Evaluation du modèle
 <p align="center">
-  <img src="Ressources/demonstration_2.png" />
-  <img src="Ressources/scores.png" />
-  <img src="Ressources/matrix.png" />
-  <img src="Ressources/eval1.png" />
+  <img src="Ressources/page_9.png" />
+  <img src="Ressources/page_10.png" />
+  <img src="Ressources/page_11.png" />
 </p>
 
 ### Simulation
 <p align="center">
-  <img src="Ressources/simulations.png" />
-  <img src="Ressources/simulations2.png" />
-  <img src="Ressources/simulations3.png" />
+  <img src="Ressources/page_12.png" />
+  <img src="Ressources/page_13.png" />
+  <img src="Ressources/page_14.png" />
+</p>
+
+### Monitoring
+<p align="center">
+  <img src="Ressources/page_16.png" />
+  <img src="Ressources/page_20.png" />
+  <img src="Ressources/page_21.png" />
 </p>
 
 # 8. Conclusion et Perspectives

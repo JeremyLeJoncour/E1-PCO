@@ -8,12 +8,13 @@ import pandas as pd
 from random import randrange
 from time import gmtime, strftime
 from datetime import datetime
+
 import connect
 
 app = Flask(__name__)
+
 dashboard.config.init_from(file='/config.cfg')
 app.config['SECRET_KEY'] = 'adrammalech'
-
 dashboard.bind(app)
 
 @app.route('/',methods=['GET','POST'])
@@ -44,6 +45,7 @@ def login():
         return render_template("index.html")
     
     except:
+        connect.alert("Le serveur SQL est inaccessible. Route : /login")
         return render_template("error.html"), 500
 
 
@@ -101,6 +103,7 @@ def account():
         return render_template('create_account.html', alerte = alerte)
 
     except:
+        connect.alert("Le serveur SQL est inaccessible. Route : /create_account")
         return render_template('error.html'), 500
 
 
@@ -152,6 +155,7 @@ def password():
         return render_template('password.html', alerte = alerte)
 
     except:
+        connect.alert("Le serveur SQL est inaccessible. Route : /login")
         return render_template('error.html'), 500
 
 
@@ -212,6 +216,7 @@ def database():
             return redirect(url_for("login"))
         
     except:
+        connect.alert("Bad Request. Route : /database")
         return render_template("error.html"), 500
 
 
@@ -243,6 +248,7 @@ def importCSV():
             return redirect(url_for("login"))
     
     except:
+        connect.alert("Bad Request. Route : /importCSV")
         return render_template("error.html"), 500
 
 
@@ -409,6 +415,7 @@ def performance():
             return redirect(url_for("login"))
             
     except:
+        connect.alert("Bad Request. Route : /performance")
         return render_template("error.html"), 500
 
 

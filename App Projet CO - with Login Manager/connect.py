@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import mysql.connector
+from twilio.rest import Client
+from dotenv import load_dotenv
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import confusion_matrix, roc_auc_score, f1_score, log_loss, matthews_corrcoef, recall_score, precision_score
 from sklearn.metrics import precision_recall_curve
@@ -12,6 +15,22 @@ colonnescaler = joblib.load('ProcessModel/ColonnesForScale.joblib')
 scaler = joblib.load('ProcessModel/ScalerXGBC_BF.joblib')
 colonnesmodel = joblib.load('ProcessModel/ColonnesXGBC_BF.joblib')
 classifier = joblib.load('ProcessModel/XGBC_BF.joblib')
+
+# Initialisation Twilio Client Alerte et Environnement :
+load_dotenv()
+twilio_client = Client()
+
+
+
+
+# Fonction Alerte SMS
+def alert(alerte):
+    twilio_client.messages.create(
+            body=f"Alerte Application : {alerte}",
+            from_='+16815252835',
+            to='+xxxxxxxxxxx')
+
+
 
 
 def login(login, password):
@@ -46,7 +65,9 @@ def login(login, password):
         access = pd.DataFrame(sql, columns = ['identifiant', 'password'])
 
     return access
-    
+
+
+
 
 def create_account(new_login, new_password):    
     config = {
@@ -66,6 +87,8 @@ def create_account(new_login, new_password):
     cursor.execute(query, (str(new_login), str(new_password)))
     link.commit()
     link.close()
+
+
 
 
 def exist_user(login):
@@ -101,6 +124,9 @@ def exist_user(login):
         
     return access
 
+
+
+
 def update_password(login, password):
     login = str(login)
     password = str(password)
@@ -122,6 +148,8 @@ def update_password(login, password):
     link.commit()
     link.close()
     
+
+
 
 def DB_dataset(year, month):
     config = {
